@@ -6,17 +6,37 @@
 
 ## Выполнили:
 
-Полуянов Александр Михайлович 
-
-341473 P33141 <a href="t.me/AlexPoluyanov">t.me/AlexPoluyanov</a>
-
-Пухова Виктория Олеговна 
-
-335332 U33762 <a href="t.me/phv_vic">t.me/phv_vic</a>
-
-Колосов Глеб Александрович
-
-336654 U33762 <a href="t.me/eto_gleb">t.me/eto_gleb</a>
+<table>
+   <thead>
+    <tr>
+      <th><img src="https://github.com/AlexPoluyanov/ITMO-BonusTrack/assets/109956453/dfdad839-25d7-4ac4-9d92-911f04ad4862" alt="image"></th>
+      <th><img src="https://github.com/AlexPoluyanov/ITMO-BonusTrack/assets/109956453/bf52d02f-11b4-422f-a5c5-766dc88b1e95" alt="image"></th>
+      <th><img src="https://github.com/AlexPoluyanov/ITMO-BonusTrack/assets/109956453/4ca909f2-9825-431f-87be-2165e39d6706" alt="image"></th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+      <td>Полуянов Александр Михайлович</td>
+      <td>Пухова Виктория Олеговна</td>
+      <td>Колосов Глеб Александрович</td>
+    </tr>
+    <tr>
+      <td>341473</td>
+      <td>335332</td>
+      <td>336654</td>
+    </tr>
+    <tr>
+      <td>P33141</td>
+      <td>U33762</td>
+      <td>U33762</td>
+    </tr>
+    <tr>
+      <td><a href="https://t.me/AlexPoluyanov">t.me/AlexPoluyanov</a></td>
+      <td><a href="https://t.me/phv_vic">t.me/phv_vic</a></td>
+      <td><a href="https://t.me/eto_gleb">t.me/eto_gleb</a></td>
+    </tr>
+  </tbody>
+</table>
 
 
 # Содержание
