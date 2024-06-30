@@ -1,4 +1,5 @@
 # ITMO-Bonustrack
+
 Итоговый проект по Bonustrack (Методы анализа данных)
 
 Тип проекта: Разработка базы данных
@@ -50,14 +51,14 @@
 <ol>
   <li>Выбрать всех студентов из одной группы упорядочив по ФИО</li>
   <li>Упорядочить сданные кем-либо экзамены по числу сдавших.</li>
-  <li>Каково число студентов, не получивших ни одного зачета</li>
+  <li>Найти человека с наивычшей суммой баллов который закрыл сессию без долгов. Вывести его зачетку.</li>
   <li>Найти самую малочисленную группу</li>
   <li>Найти студента, сдавшего больше всех экзаменов</li>
-  <li>Найти всех студентов, сдавших все обязательные экзамены с хотя бы одним несданным зачетом</li>
-  <li>Найти группу с самой большой нагрузкой (числом зачетов и экзаменов).</li>
+  <li>Найти курс который учащиеся пытаются сдать наибольшее количество раз </li>
+  <li>Найти группу/группы с самой большой нагрузкой (числом зачетов и экзаменов).</li>
   <li>Найти, сколько студентов и из каких стран учатся в вузе.</li>
   <li>Найти самый «сложный» экзамен (с максимальным процентом не сдавших). Полностью необязательные экзамены не рассматривать.</li>
-  <li>Проверить, есть ли в базе студент, не допущенный ни к одному обязательному для его группы экзамену. Можно считать, что каждая группа обязана сдавать хотя бы один экзамен.</li>
+  <li>Вывести список всех экзаменов и зачетов студнта.</li>
   
 </ol>
 
@@ -67,10 +68,24 @@
 
 # Выбор СУБД
 
+Выбор PostgreSQL обоснован следующими причинами:
+
+<ol>
+    <li>Открытый исходный код и бесплатное использование: PostgreSQL - это бесплатная СУБД с открытым исходным кодом, что позволяет избежать затрат на лицензии и дает возможность гибкой настройки под конкретные нужды.</li>
+<li>Поддержка сложных запросов: PostgreSQL отлично справляется с выполнением сложных запросов, что необходимо для анализа успеваемости студентов, формирования списков задолженностей и других отчетов.</li>
+<li>Надежность и масштабируемость: PostgreSQL известна своей надежностью и возможностью масштабирования, что важно для хранения и обработки больших объемов данных о студентах и их успеваемости.</li>
+<li>Мощные механизмы контроля доступа: СУБД предлагает развитую систему контроля доступа, что важно для обеспечения безопасности данных студентов.</li>
+<li>Соответствие стандартам SQL: PostgreSQL соответствует стандартам SQL, что облегчает разработку и поддержку системы, а также интеграцию с другими инструментами и системами.</li>
+<li>Активное сообщество и поддержка: Большое сообщество пользователей и разработчиков обеспечивает наличие документации, форумов и других ресурсов для решения возникающих вопросов.</li>
+<li>Поддержка транзакций и согласованности данных: PostgreSQL обеспечивает полную поддержку транзакций и согласованности данных, что критически важно для обеспечения точности и надежности данных в системе.</li>
+<li>Гибкие индексы и оптимизация запросов: Различные типы индексов и возможности оптимизации запросов позволяют повысить производительность системы при работе с большими объемами данных.</li>
+</ol>
+
+
 # Создание структуры данных
 
 ## Создание таблиц
-C помощью файла запускается скрипт, который создает таблицы (отношения) с прописанными связями и базовыми ограничениями целостности данных.  
+C помощью файла запускается <a href="https://github.com/AlexPoluyanov/ITMO-BonusTrack/blob/main/scripts/create%20script.sql">скрипт</a>, который создает таблицы (отношения) с прописанными связями и базовыми ограничениями целостности данных.  
 ```sql
 CREATE TYPE exam_type AS ENUM ('Зачёт', 'Экзамен', 'Дифференцированный зачёт'); 
 -- Типы итогового контроля
@@ -135,14 +150,16 @@ CREATE TABLE "access_requirements" (
 );
 ```
 
-## Заполнение таблиц groups
+## Заполнение таблиц
 
 Для заполнения таблиц рандомизированными псевдо реальными значениями был разработан Python скрипт, генерирующий последовательности SQL-запросов.  
 
-`Ссылка на файл` <a href = "">Python</a>  
+`Ссылка на файл` <a href = "https://github.com/AlexPoluyanov/ITMO-BonusTrack/blob/main/data%20generator.py">Python</a>  
 
-`Поный скрипт заполнения` можно найти по <a href = "">ссылке</a>
+`Поный скрипт заполнения` можно найти по <a href = "https://github.com/AlexPoluyanov/ITMO-BonusTrack/blob/main/scripts/inserts%20script.sql">ссылке</a>
 
+
+Заполнение таблицы groups
 ```sql
 INSERT INTO groups(group_name) VALUES
 ('N1101'),
@@ -267,3 +284,222 @@ INSERT INTO access_requirements(exam_id, required_exam_id) VALUES
 
 ## Реализация запросов
 
+```sql
+/* 1. Выбрать всех студентов из одной группы, упорядочив по ФИО: */
+
+SELECT groups.group_name, students.last_name, students.first_name,  students.middle_name
+FROM students JOIN groups ON groups.id = students.group_id
+WHERE groups.group_name = 'P3301' ORDER BY students.last_name, students.first_name,  students.middle_name;
+```
+
+![image](https://github.com/AlexPoluyanov/ITMO-BonusTrack/assets/109956453/b6f5bfd0-539b-43e6-b50c-63ac9fa74606)
+
+
+
+```sql
+/* 2. Упорядочить сданные кем-либо экзамены по числу сдавших: */
+
+SELECT
+    e.id,
+    e.name,
+    COUNT(r.id) AS passed_count
+FROM
+    exams e
+LEFT JOIN
+    results r ON e.id = r.exam_id AND r.passed = TRUE
+GROUP BY
+    e.id
+ORDER BY
+    passed_count DESC;
+```
+
+![image](https://github.com/AlexPoluyanov/ITMO-BonusTrack/assets/109956453/69a4d97e-6d64-4efb-bd6f-25303b983015)
+
+
+
+```sql
+/* 3. Найти человека с наивычшей суммой баллов который закрыл сессию без долгов. Вывести его зачетку.*/
+
+WITH all_passed_exams AS (
+    SELECT r.student_id, SUM(r.score) AS total_score
+    FROM results r
+    JOIN exams e ON r.exam_id = e.id
+    WHERE e.type IN ('Зачёт', 'Дифференцированный зачёт', 'Экзамен') AND r.passed = true
+    GROUP BY r.student_id
+)
+SELECT e.name AS exam_name, r.passed, r.score
+FROM results r
+JOIN all_passed_exams ape ON r.student_id = ape.student_id
+JOIN exams e ON r.exam_id = e.id
+JOIN students s ON r.student_id = s.id
+WHERE s.id = (
+    SELECT s.id
+    FROM all_passed_exams ape
+    JOIN students s ON ape.student_id = s.id
+    ORDER BY ape.total_score DESC
+    LIMIT 1
+)
+ORDER BY r.score DESC;
+```
+
+![image](https://github.com/AlexPoluyanov/ITMO-BonusTrack/assets/109956453/af4d6cc7-ef8d-474a-9f57-27698fe1ec01)
+
+
+
+```sql
+/* 4. Найти самую малочисленную группу*/ 
+
+SELECT
+    g.group_name,
+    COUNT(s.id) AS student_count
+FROM
+    groups g
+LEFT JOIN
+    students s ON g.id = s.group_id
+GROUP BY
+    g.id
+ORDER BY
+    student_count ASC
+LIMIT 1;
+```
+
+![image](https://github.com/AlexPoluyanov/ITMO-BonusTrack/assets/109956453/091971d8-874c-4eb8-924d-887d9092b649)
+
+
+
+```sql
+/* 5. Найти студента, сдавшего больше всех экзаменов: */
+
+SELECT
+    s.id,
+    s.last_name,
+    s.first_name,
+    COUNT(r.id) AS exams_passed
+FROM
+    students s
+JOIN
+    results r ON s.id = r.student_id AND r.passed = TRUE
+GROUP BY
+    s.id
+ORDER BY
+    exams_passed DESC
+LIMIT 1;
+```
+
+![image](https://github.com/AlexPoluyanov/ITMO-BonusTrack/assets/109956453/657a30df-22ca-4877-90b3-22caac58227c)
+
+
+
+```sql
+/* 6. Найти курс который учащиеся пытаются сдать наибольшее количество раз */
+
+SELECT e.name AS exam_name, COUNT(r.student_id) AS num_students_attempted
+FROM exams e
+LEFT JOIN results r ON e.id = r.exam_id
+GROUP BY e.id, e.name
+ORDER BY num_students_attempted DESC
+LIMIT 1;
+```
+
+![image](https://github.com/AlexPoluyanov/ITMO-BonusTrack/assets/109956453/32bf3067-41db-4e01-9b3e-b22716b8cd2e)
+
+
+
+```sql
+/* 7. Найти группу/группы с самой большой нагрузкой (числом зачетов и экзаменов): */
+
+WITH exam_counts AS (
+    SELECT
+        g.id AS group_id,
+        g.group_name,
+        COUNT(ge.exam_id) AS exam_count
+    FROM
+        groups g
+    JOIN
+        group_exams ge ON g.id = ge.group_id
+    GROUP BY
+        g.id, g.group_name
+)
+SELECT
+    group_id,
+    group_name,
+    exam_count
+FROM
+    exam_counts
+WHERE
+    exam_count = (SELECT MAX(exam_count) FROM exam_counts)
+    ORDER BY group_id;
+```
+
+![image](https://github.com/AlexPoluyanov/ITMO-BonusTrack/assets/109956453/b54dfa2a-bb72-4f15-bc77-13ca24b77302)
+
+
+
+```sql
+/* 8. Найти, сколько студентов и из каких стран учатся в вузе: */
+
+SELECT citizenship, count(citizenship)
+FROM students
+GROUP BY citizenship
+ORDER BY count(citizenship) DESC;
+```
+
+![image](https://github.com/AlexPoluyanov/ITMO-BonusTrack/assets/109956453/437bb40a-70c8-4b04-ba7d-b0804d4b82bd)
+
+
+
+```sql
+/* 9. Найти самый «сложный» экзамен (с максимальным процентом не сдавших). Полностью необязательные экзамены не рассматривать: */
+
+SELECT
+    e.id,
+    e.name,
+    (COUNT(r.id) FILTER (WHERE r.passed = FALSE) * 1.0 / COUNT(r.id)) AS fail_rate
+FROM
+    exams e
+JOIN
+    results r ON e.id = r.exam_id
+WHERE
+    e.id IN (
+        SELECT DISTINCT exam_id FROM group_exams WHERE required = TRUE
+    )
+GROUP BY
+    e.id
+ORDER BY
+    fail_rate DESC
+LIMIT 1;
+```
+
+![image](https://github.com/AlexPoluyanov/ITMO-BonusTrack/assets/109956453/f3c02df4-69cd-451c-91b5-a433a2b81551)
+
+
+
+```sql
+/* 10. Вывести список всех экзаменов и зачетов студента: */
+
+SELECT e.name, e.type, e.place, e.date
+FROM exams e
+WHERE e.id IN (
+    SELECT ge.exam_id
+    FROM group_exams ge
+    JOIN students s ON ge.group_id = s.group_id
+    WHERE s.id = 2
+    UNION ALL
+    SELECT pe.exam_id
+    FROM personal_exams pe
+    WHERE pe.student_id = 2
+) 
+ORDER BY date, type;
+```
+
+![image](https://github.com/AlexPoluyanov/ITMO-BonusTrack/assets/109956453/0bbd430d-3d7e-4a5a-8960-744fb1bde67c)
+
+# Выводы и результаты работы
+
+Для автоматизации отчетности по успеваемости студентов кафедры была создана база данных, охватывающая информацию о сдаче зачетов и экзаменов. В проекте использована PostgreSQL, выбранная из-за её открытого исходного кода, мощных возможностей выполнения сложных запросов, надежности и масштабируемости. Структура данных включает таблицы для групп, студентов, экзаменов, результатов и других сущностей, связанных с требованиями доступа и персональными экзаменами.  
+
+Реализовано несколько типовых запросов, таких как выборка студентов по группам, упорядоченных по ФИО, и анализ успеваемости (например, поиск студентов с наивысшими баллами, закрывших сессию без долгов). Также выполнены запросы на определение самых малочисленных групп, нахождение самого "сложного" экзамена и анализ стран происхождения студентов.  
+
+Реализация проекта позволяет эффективно управлять данными о студентах, их успехах и задолженностях, что важно для улучшения управления учебным процессом и предоставления актуальной отчетности кафедре. 
+
+За время работы над проектом мы укрепили свои знания в рамках разработки БД и использования языка Python для авоматизации процессов. Данные навыки помогут нам в будущей профессии.  
