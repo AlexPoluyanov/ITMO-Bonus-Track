@@ -6,12 +6,12 @@
 
 ## Выполнили:
 
-<table>
-   <thead>
+<table style="width: 100%; text-align: center;">
+  <thead>
     <tr>
-      <th><img src="https://github.com/AlexPoluyanov/ITMO-BonusTrack/assets/109956453/dfdad839-25d7-4ac4-9d92-911f04ad4862" alt="image"></th>
-      <th><img src="https://github.com/AlexPoluyanov/ITMO-BonusTrack/assets/109956453/bf52d02f-11b4-422f-a5c5-766dc88b1e95" alt="image"></th>
-      <th><img src="https://github.com/AlexPoluyanov/ITMO-BonusTrack/assets/109956453/4ca909f2-9825-431f-87be-2165e39d6706" alt="image"></th>
+      <th style="width: 33.33%;"><img src="https://github.com/AlexPoluyanov/ITMO-BonusTrack/assets/109956453/dfdad839-25d7-4ac4-9d92-911f04ad4862" alt="image" style="max-width: 100%;"></th>
+      <th style="width: 33.33%;"><img src="https://github.com/AlexPoluyanov/ITMO-BonusTrack/assets/109956453/bf52d02f-11b4-422f-a5c5-766dc88b1e95" alt="image" style="max-width: 100%;"></th>
+      <th style="width: 33.33%;"><img src="https://github.com/AlexPoluyanov/ITMO-BonusTrack/assets/109956453/4ca909f2-9825-431f-87be-2165e39d6706" alt="image" style="max-width: 100%;"></th>
     </tr>
   </thead>
   <tbody>
