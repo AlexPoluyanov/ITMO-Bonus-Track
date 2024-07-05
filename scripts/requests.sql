@@ -80,38 +80,14 @@ ORDER BY
 LIMIT 1;
 
 
-/* 6. Найти всех студентов, сдавших все обязательные экзамены с хотя бы одним несданным зачетом: */
+/* 6. Найти курс который учащиеся пытаются сдать наибольшее количество раз */
 
-SELECT
-    s.id,
-    s.first_name,
-    s.last_name
-FROM
-    students s
-WHERE
-    NOT EXISTS (
-        SELECT 1
-        FROM group_exams ge
-        WHERE ge.group_id = s.group_id
-          AND ge.required = TRUE
-          AND ge.exam_id NOT IN (
-              SELECT r.exam_id
-              FROM results r
-              WHERE r.student_id = s.id AND r.passed = TRUE
-          )
-    )
-    AND EXISTS (
-        SELECT 1
-        FROM group_exams ge
-        WHERE ge.group_id = s.group_id
-          AND ge.required = TRUE
-          AND ge.exam_id IN (
-              SELECT r.exam_id
-              FROM results r
-              WHERE r.student_id = s.id AND r.passed = FALSE
-              AND r.exam_id IN (SELECT id FROM exams WHERE type = 'Зачёт')
-          )
-    );
+SELECT e.name AS exam_name, COUNT(r.student_id) AS num_students_attempted
+FROM exams e
+LEFT JOIN results r ON e.id = r.exam_id
+GROUP BY e.id, e.name
+ORDER BY num_students_attempted DESC
+LIMIT 1;
 
 
 /* 7. Найти группу/группы с самой большой нагрузкой (числом зачетов и экзаменов): */

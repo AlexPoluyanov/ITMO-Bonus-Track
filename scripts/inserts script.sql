@@ -1,3 +1,4 @@
+BEGIN;
 INSERT INTO groups(group_name) VALUES
 ('N1101'),
 ('N1102'),
@@ -103,8 +104,7 @@ INSERT INTO groups(group_name) VALUES
 ('Z5402'),
 ('Z5403'),
 ('Z5404');
-
-
+SAVEPOINT groups;
 
 
 
@@ -2711,7 +2711,7 @@ INSERT INTO students(first_name, last_name, middle_name, date_of_birth, citizens
 ('Дмитрий', 'Смирнов', 'Валерьевич', '2001-10-20', 'Россия',  False, 35),
 ('Глеб', 'Сорокин', 'Сергеевич', '2002-06-05', 'Россия',  True, 89),
 ('Савелий', 'Кулаков', 'Валерьевич', '2001-09-27', 'Россия',  True, 60);
-
+SAVEPOINT studs;
 
 
 
@@ -3075,9 +3075,11 @@ INSERT INTO exams(name,type,place,date) VALUES
 ('Хранение и обработка данных', 'Экзамен', 'Кронверкский пр., 49, Аудитория 146', '2024-06-05 11:30'),
 ('Английский язык', 'Экзамен', 'Кронверкский пр., 49, Аудитория 338', '2024-06-25 09:00'),
 ('Математика', 'Дифференцированный зачёт', 'Ломоносова, 9, Аудитория 269', '2024-06-11 16:30'),
-('Хранение и обработка данных', 'Дифференцированный зачёт', 'Ломоносова, 9, Аудитория 329', '2024-06-01 16:00');
-
-
+('Хранение и обработка данных', 'Дифференцированный зачёт', 'Ломоносова, 9, Аудитория 329', '2024-06-01 16:00'),
+('Экономика', 'Экзамен', 'Кронверкский пр., 49, Аудитория 137', '2024-06-27 10:30'),
+('Немецкий язык', 'Зачёт', 'Кронверкский пр., 49, Аудитория 187', '2024-06-06 10:00'),
+('Профильная математика', 'Экзамен', 'Ломоносова, 9, Аудитория 212', '2024-06-06 10:00');
+SAVEPOINT exams;
 
 INSERT INTO group_exams(group_id, exam_id, required) VALUES
 (1, 1, True),
@@ -3439,12 +3441,13 @@ INSERT INTO group_exams(group_id, exam_id, required) VALUES
 (103, 357, True),
 (104, 358, False),
 (104, 359, True);
+SAVEPOINT group_exams;
 
 
-INSERT INTO exams(name, type, place, date) VALUES
-('Экономика', 'Экзамен', 'Кронверкский пр., 49, Аудитория 137', '2024-06-27 10:30'),
-('Немецкий язык', 'Зачёт', 'Кронверкский пр., 49, Аудитория 187', '2024-06-06 10:00'),
-('Профильная математика', 'Экзамен', 'Ломоносова, 9, Аудитория 212', '2024-06-06 10:00');
+
+
+
+
 
 DO $$
 DECLARE
@@ -3465,6 +3468,7 @@ BEGIN
         END IF;
     END LOOP;
 END $$;
+SAVEPOINT personal_exams;
 
 
 DO $$
@@ -3483,7 +3487,7 @@ BEGIN
             WHERE student_id = student.id
         ) LOOP
             has_access := (RANDOM() > 0.15);
-            INSERT INTO exam_access(student_id, exam_id, has_access)
+            INSERT INTO exam_access(stud_id, exam_id, has_access)
             VALUES (student.id, exam, has_access);
             IF has_access = TRUE THEN
                 score := ((RANDOM()*100+30)::NUMERIC % 100);
@@ -3501,8 +3505,11 @@ BEGIN
         END LOOP;
     END LOOP;
 END $$;
+SAVEPOINT results;
+
 
 INSERT INTO access_requirements(exam_id, required_exam_id) VALUES
 (362, 355),
 (362, 352);
-
+SAVEPOINT access_requirements;
+COMMIT;
